@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Project X</title>
+    <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css" />
+    <style>
+        [type="date"] {
+            background: #fff
+            url(https://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/calendar_2.png)
+            97% 50% no-repeat;
+        }
+        [type="date"]::-webkit-inner-spin-button {
+            display: none;
+        }
+        [type="date"]::-webkit-calendar-picker-indicator {
+            opacity: 0;
+        }
+
+        label {
+            display: block;
+            margin: 5px;
+        }
+        input {
+            border: 1px solid #c4c4c4;
+            border-radius: 5px;
+            background-color: #fff;
+            padding: 3px 5px;
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+            width: 190px;
+        }
+
+        .button {
+            border-radius: 5px;
+            width: 50px;
+            height: 25px;
+            margin: 5px;
+        }
+
+        form {
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .date {
+            font: 13px/1.4 Geneva, "Lucida Sans", "Lucida Grande",
+            "Lucida Sans Unicode", Verdana, sans-serif;
+        }
+
+        body {
+            font: 13px/1.4 Geneva, "Lucida Sans", "Lucida Grande",
+            "Lucida Sans Unicode", Verdana, sans-serif;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        h1 {
+            font: 13px/1.4 Geneva, "Lucida Sans", "Lucida Grande",
+            "Lucida Sans Unicode", Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem;
+            font-size: 2rem;
+        }
+
+        h3 {
+            font-size: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        h3 small {
+            font-size: 0.5em;
+        }
+
+        .responsive-table li {
+            border-radius: 3px;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .responsive-table .table-header {
+            background: linear-gradient(180deg, rgba(2,0,36,1)0%, rgba(9,9,121,1)35%, rgba(0,212,255,1)100%);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: aliceblue;
+        }
+
+        .responsive-table .table-row {
+            background-color: #ffffff;
+            box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.1);
+        }
+        .responsive-table .col-1 {
+            flex-basis: 30%;
+        }
+        .responsive-table .col-2 {
+            flex-basis: 20%;
+        }
+        .responsive-table .col-3 {
+            flex-basis: 30%;
+        }
+        .responsive-table .col-4 {
+            flex-basis: 20%;
+        }
+        .responsive-table .col-5 {
+            flex-basis: 20%;
+        }
+        @media all and (max-width: 767px) {
+            .responsive-table .table-header {
+                display: none;
+            }
+            .responsive-table li {
+                display: block;
+            }
+            .responsive-table .col {
+                flex-basis: 100%;
+            }
+            .responsive-table .col {
+                display: flex;
+                padding: 10px 0;
+            }
+            .responsive-table .col:before {
+                color: #6c7a89;
+                padding-right: 10px;
+                content: attr(data-label);
+                flex-basis: 50%;
+                text-align: right;
+            }
+        }
+
+        .tr-1:hover {
+            background: #6c7a8928;
+        }
+
+        .col-2 a {
+            color: #007bff; 
+            text-decoration: underline; 
+            cursor: pointer;
+        }
+
+        .col-2 a:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Stock Information</h1>
+
+    <div class="container">
+        <form action="/rundate" method="post">
+            <label for="selectDate">Date</label>
+            <input class="date" type="date" id="selectDate" name="selectDate" value="" min="2000-01-01" max="2025-12-31" />
+            <button class="button" type="submit" style="cursor: pointer">Run</button>
+        </form>
+    </div>
+
+    {% if selected_date %}
+        <h3>Stock Prices for {{ selected_date }}</h3>
+        <div class="container">
+            <ul class="responsive-table table">
+                <li class="table-header">
+                    <div class="col col-1">Stock Name</div>
+                    <div class="col col-2">Ticker</div>
+                    <div class="col col-3">Price</div>
+                    <div class="col col-4">Support</div>
+                    <div class="col col-5">Resistance</div>
+                </li>
+                {% for row in results %}
+                    <li class="table-row tr-1">
+                        <div class="col col-1" data-label="SNo">{{ row[0] }}</div>
+                        <div class="col col-2" data-label="Ticker"><a href="https://finance.yahoo.com/quote/{{ row[1] }}" target="_blank">{{ row[1] }}</a>
+                        </div>
+                        <div class="col col-3" data-label="Price">
+                            {% if stock_prices[row[1]] %}
+                            {{ stock_prices[row[1]][0]['Close'] }}
+                        {% else %}
+                            None
+                        {% endif %}
+                        </div>
+                        <div class="col col-4" data-label="Support">{{ row[2] }}</div>
+                        <div class="col col-5" data-label="Resistance">{{ row[3] }}</div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+</body>
+</html>
