@@ -1,4 +1,4 @@
-# Project Description: Stock Information Web App 📈🌐
+# Project X - Stock Information Web App 📈🌐
 
 #### Objective:
 The Stock Information Web App aims to provide users with real-time stock prices and support/resistance levels for selected companies on a specified date. Users can input a date, and the app fetches and displays relevant stock information.
